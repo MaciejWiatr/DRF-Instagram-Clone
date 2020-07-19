@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "accounts_api",
 ]
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # only if django version >= 3.0
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
