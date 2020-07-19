@@ -4,7 +4,6 @@ from .models import UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     profile_id = serializers.PrimaryKeyRelatedField(
         read_only=True, source="profile")
 
@@ -18,12 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
                 "style": {"input_type": "password"}
             }
         }
-
-
-class FollowsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ["id"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
