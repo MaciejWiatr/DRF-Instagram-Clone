@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "accounts_api",
     "posts_api",
+    'drf_yasg',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'  # only if django version >= 3.0

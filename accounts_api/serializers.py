@@ -28,7 +28,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password", "profile"]
+        fields = ["id", "username", "email", "password", "profile", "posts"]
+        depth = 1
 
         extra_kwargs = {
             "password": {
