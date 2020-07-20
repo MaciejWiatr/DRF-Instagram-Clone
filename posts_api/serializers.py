@@ -46,16 +46,24 @@ class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     likes_amount = serializers.SerializerMethodField("get_likes_amount")
     author = AuthorSerializer(read_only=True)
+    is_liked = serializers.SerializerMethodField("get_is_liked")
 
     class Meta:
         model = Post
         fields = ["id", "author", "image", "title",
-                  "description", "likes", "likes_amount", "comments"]
+                  "description", "likes", "likes_amount", "comments", "is_liked"]
         depth = 1
         extra_kwargs = {
-            "author": {"read_only": True}
+            "author": {"read_only": True},
+            "is_liked": {"read_only": True},
         }
 
     @staticmethod
     def get_likes_amount(obj):
         return obj.likes.count()
+
+    def get_is_liked(self, obj):
+        user = self.context['request'].user
+        if user and not user.is_anonymous:
+            return bool(obj.likes.filter(author=user))
+        return None
