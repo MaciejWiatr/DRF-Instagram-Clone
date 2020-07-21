@@ -23,7 +23,6 @@ class LikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = "__all__"
-        # depth = 1
 
         extra_kwargs = {
             "author": {"read_only": True}

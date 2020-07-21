@@ -4,11 +4,12 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
+from rest_framework import filters
+from rest_framework.views import Response
 from django.shortcuts import get_object_or_404
 from .serializers import *
 from .models import *
 from .permissions import UpdateOwn
-from rest_framework.views import Response
 # Create your views here.
 
 
@@ -17,12 +18,15 @@ class PostViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "description", "author__username"]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
 class CommentViewSet(ModelViewSet):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, UpdateOwn]
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
