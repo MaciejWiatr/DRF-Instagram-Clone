@@ -41,6 +41,13 @@ class LikesApiView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = LikesSerializer
 
+    def get(self, request, pk=None):
+        if pk:
+            like = self.serializer_class(Like.objects.get(id=pk)).data
+            return Response(data=like)
+        likes = self.serializer_class(Like.objects.all(), many=True).data
+        return Response(data=likes)
+
     def post(self, request, format=None):
         post_id = request.POST['post']
         post = get_object_or_404(Post, pk=post_id)
@@ -49,7 +56,13 @@ class LikesApiView(APIView):
         serializer = self.serializer_class(new_like).data
         return Response(data=serializer, status=status.HTTP_201_CREATED)
 
-    def delete(self, request, pk):
-        like = get_object_or_404(Like, pk=pk)
-        like.delete()
-        return Response(status=status.HTTP_200_OK)
+    def delete(self, request, pk=None):
+        if pk:
+            like = get_object_or_404(Like, pk=pk)
+            if like.author == request.user:
+                like.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
