@@ -7,7 +7,7 @@ from pathlib import Path
 
 def main():
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pinterest_clone.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'instagram_clone.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
