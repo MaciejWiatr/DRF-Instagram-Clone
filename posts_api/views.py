@@ -24,7 +24,6 @@ class FeedApiView(APIView):
     def get(self, request, pk=None):
         follows = UserProfile.objects.get(user=request.user).follows.all()
         feed_queryset = Post.objects.filter(author__id__in=follows)
-        print(feed_queryset)
         data = self.serializer_class(
             feed_queryset, many=True, context={"request": request}
         ).data
@@ -57,7 +56,7 @@ class CommentViewSet(ModelViewSet):
 class LikesApiView(APIView):
 
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = LikesSerializer
 
     def get(self, request, pk=None):
@@ -68,7 +67,7 @@ class LikesApiView(APIView):
         return Response(data=likes)
 
     def post(self, request, format=None):
-        post_id = request.POST["post"]
+        post_id = request.data["post"]
         post = get_object_or_404(Post, pk=post_id)
         new_like, _ = Like.objects.get_or_create(author=request.user, post=post)
         serializer = self.serializer_class(new_like).data
