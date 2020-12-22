@@ -1,6 +1,8 @@
+from accounts_api.models import UserProfile
 from django.shortcuts import render
+from rest_framework.mixins import ListModelMixin
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
@@ -10,7 +12,24 @@ from django.shortcuts import get_object_or_404
 from .serializers import *
 from .models import *
 from .permissions import UpdateOwn
+
 # Create your views here.
+
+
+class FeedApiView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    serializer_class = PostSerializer
+
+    def get(self, request, pk=None):
+        follows = UserProfile.objects.get(user=request.user).follows.all()
+        feed_queryset = Post.objects.filter(author__id__in=follows)
+        print(feed_queryset)
+        data = self.serializer_class(
+            feed_queryset, many=True, context={"request": request}
+        ).data
+
+        return Response(data=data)
 
 
 class PostViewSet(ModelViewSet):
@@ -49,10 +68,9 @@ class LikesApiView(APIView):
         return Response(data=likes)
 
     def post(self, request, format=None):
-        post_id = request.POST['post']
+        post_id = request.POST["post"]
         post = get_object_or_404(Post, pk=post_id)
-        new_like, _ = Like.objects.get_or_create(
-            author=request.user, post=post)
+        new_like, _ = Like.objects.get_or_create(author=request.user, post=post)
         serializer = self.serializer_class(new_like).data
         return Response(data=serializer, status=status.HTTP_201_CREATED)
 
