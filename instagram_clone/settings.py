@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "accounts_api",
     "posts_api",
     "drf_yasg",
+    'debug_toolbar',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"  # only if django version >= 3.0
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = "instagram_clone.urls"
@@ -155,4 +157,15 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': os.path.join(BASE_DIR, "tmp/cache/"),
     }
+}
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20
 }
