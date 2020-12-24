@@ -16,7 +16,8 @@ import os
 
 if "SECRET_KEY" not in os.environ:
     raise Exception(
-        "No django secret key was provided, please check your enviroment variables")
+        "No django secret key was provided, please check your enviroment variables"
+    )
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -54,7 +55,7 @@ INSTALLED_APPS = [
     "accounts_api",
     "posts_api",
     "drf_yasg",
-    'debug_toolbar',
+    "debug_toolbar",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"  # only if django version >= 3.0
@@ -70,7 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "instagram_clone.urls"
@@ -152,17 +153,14 @@ STATIC_ROOT = BASE_DIR + "/static/"
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, "tmp/cache/"),
-    }
-}
+# TODO Implement redis cache as file based was too slow
 
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, "tmp/cache/"),
+#     }
+# }
 
 # TODO Implement pagination
 
