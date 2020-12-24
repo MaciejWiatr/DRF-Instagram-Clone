@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
+
 
 # Create your models here.
 
@@ -8,11 +10,11 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="posts")
     image = models.ImageField(upload_to="posts")
-    title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
+    created_date = models.DateTimeField(blank=True, default=now, editable=True)
 
     def __str__(self):
-        return self.title + "Post"
+        return f"Post by {self.author}"
 
 
 class Like(models.Model):

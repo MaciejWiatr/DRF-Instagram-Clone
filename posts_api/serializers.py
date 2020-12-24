@@ -54,7 +54,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ["id", "author",  "title", "description", "image", "is_liked",
+        fields = ["id", "author", "description", "image", "created_date", "is_liked",
                   "likes", "likes_amount", "comments", "comments_amount"]
         depth = 1
         extra_kwargs = {
