@@ -39,6 +39,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_filters",
     "corsheaders",
     "admin_interface",
     "colorfield",

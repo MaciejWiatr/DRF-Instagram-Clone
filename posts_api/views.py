@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from .serializers import *
 from .models import *
 from .permissions import UpdateOwn
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 
@@ -36,8 +37,9 @@ class PostViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["title", "description", "author__username"]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filterset_fields=["author__id"]
+    search_fields = ["description", "author__username", "author__id"]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
