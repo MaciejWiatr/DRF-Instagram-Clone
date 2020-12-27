@@ -38,8 +38,8 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields=["author__id"]
-    search_fields = ["description", "author__username", "author__id"]
+    filterset_fields = ["author__id", "description"]
+    search_fields = ["description"]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
