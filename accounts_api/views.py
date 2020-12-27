@@ -10,6 +10,7 @@ from .serializers import UserProfileSerializer, UserSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class UserViewSet(ModelViewSet):
@@ -17,10 +18,9 @@ class UserViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [UpdateOwnUser]
     serializer_class = UserSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-    ]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filterset_fields = ["username"]
+    search_fields = ["username"]
 
 
 class UserProfileViewSet(ModelViewSet):
