@@ -12,11 +12,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "profile"]
         depth = 1
 
-        extra_kwargs = {
-            "profile": {
-                "read_only": True
-            }
-        }
+        extra_kwargs = {"profile": {"read_only": True}}
 
 
 class LikesSerializer(serializers.ModelSerializer):
@@ -26,9 +22,7 @@ class LikesSerializer(serializers.ModelSerializer):
         model = Like
         fields = "__all__"
 
-        extra_kwargs = {
-            "author": {"read_only": True}
-        }
+        extra_kwargs = {"author": {"read_only": True}}
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -38,9 +32,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = "__all__"
 
-        extra_kwargs = {
-            "author": {"read_only": True}
-        }
+        extra_kwargs = {"author": {"read_only": True}}
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -54,8 +46,18 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ["id", "author", "description", "image", "created_date", "is_liked",
-                  "likes", "likes_amount", "comments", "comments_amount"]
+        fields = [
+            "id",
+            "author",
+            "description",
+            "image",
+            "created_date",
+            "is_liked",
+            "likes",
+            "likes_amount",
+            "comments",
+            "comments_amount",
+        ]
         depth = 1
         extra_kwargs = {
             "author": {"read_only": True},
@@ -71,7 +73,18 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.comments.count()
 
     def get_is_liked(self, obj):
-        user = self.context['request'].user
+        user = self.context["request"].user
         if user and not user.is_anonymous:
             return bool(obj.likes.filter(author=user))
         return None
+
+
+class LikesDetailedSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+    post = PostSerializer(read_only=True)
+
+    class Meta:
+        model = Like
+        fields = "__all__"
+
+        extra_kwargs = {"author": {"read_only": True}}

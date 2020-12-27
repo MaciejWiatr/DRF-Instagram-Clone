@@ -54,6 +54,7 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+
 class LikeViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -68,3 +69,17 @@ class LikeViewSet(ModelViewSet):
         new_like, _ = Like.objects.get_or_create(author=request.user, post=post)
         serializer = self.serializer_class(new_like).data
         return Response(data=serializer, status=status.HTTP_201_CREATED)
+
+
+class LikedApiView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get(self, request):
+        liked_posts = Post.objects.filter(likes__author__id=request.user.id)
+        serializer_data = self.serializer_class(
+            liked_posts, many=True, context={"request": request}
+        ).data
+
+        return Response(data=serializer_data)
