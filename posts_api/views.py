@@ -54,34 +54,17 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-
-class LikesApiView(APIView):
-
+class LikeViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = LikesSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("author__id",)
+    queryset = Like.objects.all()
 
-    def get(self, request, pk=None):
-        if pk:
-            like = self.serializer_class(Like.objects.get(id=pk)).data
-            return Response(data=like)
-        likes = self.serializer_class(Like.objects.all(), many=True).data
-        return Response(data=likes)
-
-    def post(self, request, format=None):
+    def create(self, request, *args, **kwargs):
         post_id = request.data["post"]
         post = get_object_or_404(Post, pk=post_id)
         new_like, _ = Like.objects.get_or_create(author=request.user, post=post)
         serializer = self.serializer_class(new_like).data
         return Response(data=serializer, status=status.HTTP_201_CREATED)
-
-    def delete(self, request, pk=None):
-        if pk:
-            like = get_object_or_404(Like, pk=pk)
-            if like.author == request.user:
-                like.delete()
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response(status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
