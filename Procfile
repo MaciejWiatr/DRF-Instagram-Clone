@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn todo_api_project.wsgi --log-file -
+web: gunicorn instagram_clone.wsgi --log-file -
