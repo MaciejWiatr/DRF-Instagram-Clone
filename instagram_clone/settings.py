@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+
+import dj_database_url
 import os
+import whitenoise
+
 
 # Check if Secret key exists in env variables
 
@@ -33,7 +37,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -62,6 +66,7 @@ INSTALLED_APPS = [
 X_FRAME_OPTIONS = "SAMEORIGIN"  # only if django version >= 3.0
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -169,3 +174,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 #     'PAGE_SIZE': 20
 # }
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+prod_db = dj_database_url.config(conn_max_age=500)
+DATABASES["default"].update(prod_db)
