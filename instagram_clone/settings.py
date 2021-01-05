@@ -35,7 +35,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv("DEBUG") == "True" else False
+
+print(f"Debug mode is {DEBUG}")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -144,6 +146,33 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Logging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "root": {"level": "INFO", "handlers": ["file"]},
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": f"{BASE_DIR}/django.log",
+            "formatter": "app",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["file"], "level": "INFO", "propagate": True},
+    },
+    "formatters": {
+        "app": {
+            "format": (
+                "%(asctime)s [%(levelname)-8s] " "(%(module)s.%(funcName)s) %(message)s"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -178,3 +207,12 @@ CORS_ORIGIN_ALLOW_ALL = True
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES["default"].update(prod_db)
+
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CL_CLOUD_NAME"),
+    "API_KEY": os.getenv("CL_API_KEY"),
+    "API_SECRET": os.getenv("CL_API_SECRET"),
+}
