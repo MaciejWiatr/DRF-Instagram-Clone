@@ -190,12 +190,13 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # TODO Implement redis cache as file based was too slow
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION': os.path.join(BASE_DIR, "tmp/cache/"),
-#     }
-# }
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': os.path.join(BASE_DIR, "tmp/cache/"),
+        }
+    }
 
 # TODO Implement pagination
 
