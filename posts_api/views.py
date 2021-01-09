@@ -96,6 +96,17 @@ class PostLikes(APIView):
             post.likes, many=True, context={"request": request}
         ).data
 
-        return Response(
-            data={"likes": likes_data, "is_liked": post_data["is_liked"]}
-        )
+        return Response(data={"likes": likes_data, "is_liked": post_data["is_liked"]})
+
+
+class PostComments(APIView):
+    authentication_classes = [TokenAuthentication]
+    serializer_class = CommentSerializer
+
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+        comments_data = self.serializer_class(
+            post.comments, many=True, context={"request": request}
+        ).data
+
+        return Response(data=comments_data)

@@ -13,5 +13,6 @@ urlpatterns = [
     path("feed/", FeedApiView.as_view()),
     path("liked/", LikedApiView.as_view()),
     path("posts/<post_id>/likes", PostLikes.as_view()),
+    path("posts/<post_id>/comments", PostComments.as_view()),
     path("", include(ROUTER.urls)),
 ]
