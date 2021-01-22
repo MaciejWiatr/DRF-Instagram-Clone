@@ -1,0 +1,1 @@
+default_app_config = "accounts_api.apps.AccountsApiConfig"
